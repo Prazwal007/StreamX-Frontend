@@ -39,7 +39,7 @@ class DownloadDetailsModal extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _infoRow('File size:', _bytesReadable(t.totalBytes)),
+                _infoRow('File size:', t.totalBytes == null? 'Unknown': _bytesReadable(t.totalBytes!),),
                 _infoRow('Downloaded:', '${_bytesReadable(t.downloadedBytes)} (${t.progress}%)'),
                 const SizedBox(height: 12),
                 ClipRRect(

@@ -4,29 +4,36 @@ import './download_details_modal.dart';
 import '../models/download_task.dart';
 import '../controllers/downloads_controller.dart';
 import '../theme/app_theme.dart';
-
 class DownloadItemCard extends StatelessWidget {
   final DownloadTask task;
+
   const DownloadItemCard({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<DownloadsController>(context, listen: false);
+    final percent = (task.progress * 100).toStringAsFixed(1);
+    final isCompleted = task.status == DownloadStatus.completed;
+
     return Card(
       color: Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: InkWell(
         onTap: () => showDialog(
-    context: context,
-    builder: (_) => DownloadDetailsModal(taskId: task.id),
-  ),
-        child: Container(
+          context: context,
+          builder: (_) => DownloadDetailsModal(taskId: task.id),
+        ),
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             children: [
               SizedBox(
                 width: 48,
-                child: Icon(Icons.insert_drive_file, size: 28, color: Colors.white70),
+                child: Icon(
+                  Icons.insert_drive_file,
+                  size: 28,
+                  color: Theme.of(context).iconTheme.color,
+                ),
               ),
               Expanded(
                 flex: 4,
@@ -35,29 +42,47 @@ class DownloadItemCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(task.filename, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                        Text(
+                          task.filename,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
                         if (task.isPriority) const SizedBox(width: 4),
-                        if (task.isPriority) const Icon(Icons.push_pin, color: AppTheme.neon, size: 16),
+                        if (task.isPriority)
+                          const Icon(Icons.push_pin, color: AppTheme.neon, size: 16),
                       ],
                     ),
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: LinearProgressIndicator(
-                        value: task.progress / 100,
+                        value: isCompleted
+                            ? 1.0
+                            : (task.totalBytes == null ? null : task.progress),
                         minHeight: 8,
-                        backgroundColor: Colors.white12,
+                        backgroundColor: Theme.of(context).dividerColor,
                         valueColor: const AlwaysStoppedAnimation(AppTheme.neon),
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text('${task.progress}%  | ${task.totalBytes} bytes',
-                        style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                    Text(
+                      task.totalBytes == null
+                          ? 'Downloading...'
+                          : '$percent%  | ${task.totalBytes} bytes',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),
               IconButton(
-                icon: Icon(task.isPriority ? Icons.push_pin : Icons.push_pin_outlined, color: AppTheme.neon),
+                icon: Icon(
+                  task.isPriority
+                      ? Icons.push_pin
+                      : Icons.push_pin_outlined,
+                  color: AppTheme.neon,
+                ),
                 onPressed: () => controller.togglePriority(task.id),
               ),
             ],

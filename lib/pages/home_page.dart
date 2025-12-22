@@ -25,11 +25,11 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: const [
-            LeftToolbar(), // vertical icon toolbar
+            LeftToolbar(),
             SizedBox(width: 12),
-            CategoriesSidebar(), // collapsible categories
+            CategoriesSidebar(),
             SizedBox(width: 12),
-            Expanded(child: DownloadsTable()), // main downloads area
+            Expanded(child: DownloadsTable()),
           ],
         ),
       ),
@@ -59,7 +59,7 @@ class _AddDownloadDialogState extends State<_AddDownloadDialog> {
     final isDark = Provider.of<ThemeController>(context).isDark;
     return AlertDialog(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-      title: const Text('New Download', style: TextStyle(color: Colors.white)),
+      title: const Text('New Download', style:  TextStyle(color: Colors.white)),
       content: TextField(
         controller: _controller,
         decoration: InputDecoration(

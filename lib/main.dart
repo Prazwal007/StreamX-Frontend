@@ -16,7 +16,7 @@ class DownloadManagerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DownloadsController()..seedDemo()),
+        ChangeNotifierProvider(create: (_) => DownloadsController()..init()),
         ChangeNotifierProvider(create: (_) => ThemeController()),
       ],
       child: Consumer<ThemeController>(
