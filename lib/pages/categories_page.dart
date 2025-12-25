@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:http/http.dart' as http;
 import '../theme/app_theme.dart';
 import '../components/categories_sidebar.dart';
@@ -32,7 +33,11 @@ class CategoryFilesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.bgDark,
+      appBar: AppBar(
+        title: Text(title),
+        centerTitle: true,
+      ),
+      backgroundColor: Theme.of(context).canvasColor,
       body: SafeArea(
         child: Row(
           children: [
@@ -42,16 +47,7 @@ class CategoryFilesPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                  
                   Expanded(
                     child: FutureBuilder<List<Map<String, dynamic>>>(
                       future: _fetchFiles(),
@@ -88,6 +84,16 @@ class CategoryFilesPage extends StatelessWidget {
                             return ListTile(
                               title: Text(file['name']),
                               subtitle: Text(file['path']),
+                              leading: const Icon(Icons.insert_drive_file),
+                              onTap: () async {
+                                final result = await OpenFilex.open(file['path']);
+
+                                if (result.type != ResultType.done) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Could not open file: ${result.message}')),
+                                  );
+                                }
+                              },
                             );
                           },
                         );

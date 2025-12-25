@@ -47,7 +47,7 @@ class DownloadDetailsModal extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: t.progress / 100,
                     minHeight: 12,
-                    valueColor: const AlwaysStoppedAnimation(AppTheme.neon),
+                    valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
                     backgroundColor: Colors.white12,
                   ),
                 ),
@@ -56,7 +56,7 @@ class DownloadDetailsModal extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppTheme.neon),
+                      style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
                       onPressed: () {
                         ctrl.togglePriority(taskId);
                         Navigator.pop(context);
@@ -65,7 +65,7 @@ class DownloadDetailsModal extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppTheme.neon),
+                      style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
                       onPressed: () {
                         if (t.status == DownloadStatus.downloading) {
                           ctrl.pause(t.id);

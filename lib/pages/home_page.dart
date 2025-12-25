@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../components/left_toolbar.dart';
+import '../components/top_toolbar.dart';
 import '../components/categories_sidebar.dart';
 import '../components/downloads_table.dart';
-import '../theme/themecontroller.dart';
 import '../controllers/downloads_controller.dart';
+import '../theme/app_theme.dart';
+import '../theme/themecontroller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,26 +14,86 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Download Manager'),
+        title: const Text('Recent Downlaods'),
+        centerTitle: true,
         actions: [
-          // Theme toggle button
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () => Provider.of<ThemeController>(context, listen: false).toggleTheme(),
+          PopupMenuButton<AppThemeMode>(
+            icon: const Icon(Icons.palette_outlined),
+            onSelected: (mode) {
+              context.read<MultiThemeController>().setTheme(mode);
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: AppThemeMode.dark,
+                child: Text('Dark'),
+              ),
+              PopupMenuItem(
+                value: AppThemeMode.light,
+                child: Text('Light'),
+              ),
+              PopupMenuItem(
+                value: AppThemeMode.gray,
+                child: Text('Gray'),
+              ),
+              PopupMenuItem(
+                value: AppThemeMode.amoled,
+                child: Text('AMOLED'),
+              ),
+              PopupMenuItem(
+                value: AppThemeMode.midnight,
+                child: Text('Midnight'),
+              ),
+              PopupMenuItem(
+                value: AppThemeMode.nord,
+                child: Text('Nord'),
+              ),
+               PopupMenuItem(
+                value: AppThemeMode.dracula,
+                child: Text('Dracula'),
+              ),
+               PopupMenuItem(
+                value: AppThemeMode.gruvbox,
+                child: Text('GruvBox'),
+              ),
+               PopupMenuItem(
+                value: AppThemeMode.oneDark,
+                child: Text('OneDark'),
+              ),
+               PopupMenuItem(
+                value: AppThemeMode.tokyoNight,
+                child: Text('Tokyo Night'),
+              ),
+               PopupMenuItem(
+                value: AppThemeMode.paprika,
+                child: Text('Paprika'),
+              ),
+               
+            ],
           ),
         ],
       ),
       body: SafeArea(
         child: Row(
-          children: const [
-            LeftToolbar(),
-            SizedBox(width: 12),
-            CategoriesSidebar(),
-            SizedBox(width: 12),
-            Expanded(child: DownloadsTable()),
+          children: [
+            const CategoriesSidebar(),
+
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                children: [
+                  TopToolbar(),
+                  Divider(color:Theme.of(context).primaryColor,),
+                  // SizedBox(height: 12),
+                  Expanded(
+                    child: DownloadsTable(),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context),
         child: const Icon(Icons.add),
@@ -47,6 +108,7 @@ class HomePage extends StatelessWidget {
 
 class _AddDownloadDialog extends StatefulWidget {
   const _AddDownloadDialog();
+
   @override
   State<_AddDownloadDialog> createState() => _AddDownloadDialogState();
 }
@@ -56,33 +118,31 @@ class _AddDownloadDialogState extends State<_AddDownloadDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Provider.of<ThemeController>(context).isDark;
+    final theme = Theme.of(context);
+
     return AlertDialog(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-      title: const Text('New Download', style:  TextStyle(color: Colors.white)),
+      backgroundColor: theme.cardColor,
+      title: Text(
+        'New Download',
+        style: theme.textTheme.bodyLarge,
+      ),
       content: TextField(
         controller: _controller,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Paste download URL',
-          hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.black45),
         ),
-        style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+        style: theme.textTheme.bodyMedium,
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel', style: TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1DB954),
-          ),
           onPressed: () {
             final url = _controller.text.trim();
             if (url.isNotEmpty) {
-              // Add via provider
-              final prov = Provider.of<DownloadsController>(context, listen: false);
-              prov.addFromUrl(url);
+              context.read<DownloadsController>().addFromUrl(url);
             }
             Navigator.pop(context);
           },
@@ -92,3 +152,4 @@ class _AddDownloadDialogState extends State<_AddDownloadDialog> {
     );
   }
 }
+

@@ -51,7 +51,7 @@ class DownloadItemCard extends StatelessWidget {
                         ),
                         if (task.isPriority) const SizedBox(width: 4),
                         if (task.isPriority)
-                          const Icon(Icons.push_pin, color: AppTheme.neon, size: 16),
+                           Icon(Icons.push_pin, color: Theme.of(context).primaryColor, size: 16),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -63,7 +63,7 @@ class DownloadItemCard extends StatelessWidget {
                             : (task.totalBytes == null ? null : task.progress),
                         minHeight: 8,
                         backgroundColor: Theme.of(context).dividerColor,
-                        valueColor: const AlwaysStoppedAnimation(AppTheme.neon),
+                        valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -81,7 +81,7 @@ class DownloadItemCard extends StatelessWidget {
                   task.isPriority
                       ? Icons.push_pin
                       : Icons.push_pin_outlined,
-                  color: AppTheme.neon,
+                  color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () => controller.togglePriority(task.id),
               ),

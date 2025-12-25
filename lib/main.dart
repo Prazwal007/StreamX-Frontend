@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:streamx/theme/themecontroller.dart';
 import 'theme/app_theme.dart';
-import 'theme/themecontroller.dart';
+import 'controllers/themecontroller.dart';
 import 'controllers/downloads_controller.dart';
+import 'controllers/categories_controller.dart';
 import 'pages/home_page.dart';
 
 void main() {
   runApp(const DownloadManagerApp());
+  WidgetsFlutterBinding.ensureInitialized();
 }
 
 class DownloadManagerApp extends StatelessWidget {
@@ -18,15 +21,15 @@ class DownloadManagerApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DownloadsController()..init()),
         ChangeNotifierProvider(create: (_) => ThemeController()),
+        ChangeNotifierProvider(create: (_) => CategoryController()),
+        ChangeNotifierProvider(create: (_)=>MultiThemeController()),
       ],
-      child: Consumer<ThemeController>(
+      child: Consumer<MultiThemeController>(
         builder: (context, themeCtrl, _) {
           return MaterialApp(
             title: 'Download Manager',
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeCtrl.themeMode,
+            theme:themeCtrl.theme,
             home: const HomePage(),
           );
         },
