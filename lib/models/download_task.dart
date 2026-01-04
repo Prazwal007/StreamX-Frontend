@@ -51,10 +51,11 @@ class DownloadTask {
   final String id;
   final String url;
   final String filename;
-  final String filePath;
+  final String? filePath;
 
   int downloadedBytes;
   int? totalBytes;
+  int? eta;
 
   DownloadStatus status;
   bool isPriority;
@@ -62,12 +63,12 @@ class DownloadTask {
   DownloadTask({
     required this.id,
     required this.url,
-    required this.filename,
+    this.filename="File",
     required this.filePath,
     required this.downloadedBytes,
     required this.totalBytes,
     required this.status,
-
+    this.eta,
     this.isPriority = false,
   });
 
@@ -82,7 +83,8 @@ class DownloadTask {
     return DownloadTask(
       id: json['id'],
       url: json['url'],
-      filename: json['url'].split('/').last,
+      eta: json['eta_seconds'],
+      filename: json['filename'] ?? json['url'].split('/').last,
       filePath: json['file_path'],
       downloadedBytes: json['downloaded'],
       totalBytes: json['total'],
