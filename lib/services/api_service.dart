@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import '../theme/themecontroller.dart';
 
 class ApiService {
-  static const baseUrl = 'http://127.0.0.1:8000'; // FastAPI backend
+  static const baseUrl = 'http://127.0.0.1:8000';
 
-  // Health check
   static Future<Map<String, dynamic>> healthCheck() async {
     final res = await http.get(Uri.parse('$baseUrl/health'));
     if (res.statusCode == 200) {
@@ -15,9 +14,9 @@ class ApiService {
     }
   }
 
-  // Example: fetch downloads (you can add more endpoints here)
+
   static Future<List<dynamic>> getDownloads() async {
-    final res = await http.get(Uri.parse('$baseUrl/downloads')); // replace with real route
+    final res = await http.get(Uri.parse('$baseUrl/downloads')); 
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     } else {
