@@ -271,12 +271,22 @@ class DownloadsController extends ChangeNotifier {
     }
   }
 
-  void togglePriority(String id) {
+  void togglePriority(String id) async {
     final task = getById(id);
     if (task == null) return;
+    
     task.isPriority = !task.isPriority;
+    if(task.isPriority){
+    await http.post(Uri.parse('$httpBase/downloads/$id/pin'));
+    }
+    if(!task.isPriority){
+      await http.post(Uri.parse('$httpBase/downloads/$id/unpin'));
+
+    }
     notifyListeners();
+    
   }
+
 
   DownloadTask _fromWsJson(Map<String, dynamic> json) {
     return DownloadTask(
@@ -288,6 +298,7 @@ class DownloadsController extends ChangeNotifier {
       totalBytes: json['total'],
       status: _statusFromString(json['status']),
       filePath: json['file_path'],
+      isPriority: json['is_pinned']
     );
   }
 
